@@ -16,10 +16,10 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 import os
 
-ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOSTS',
-    'localhost,127.0.0.1,sistema-academico-5nz0.onrender.com'
-).split(',')
+ALLOWED_HOSTS = [
+    'sistema-academico-5nz0.onrender.com',
+]
+
 
 
 INSTALLED_APPS = [
