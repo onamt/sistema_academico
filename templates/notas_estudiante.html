@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <div class="dashboard-hero mb-4">
+      <div class="dashboard-header text-center">
+        <h1 class="dashboard-title">Notas de {{ estudiante.nombre }} {{ estudiante.apellido }}</h1>
+        <p class="dashboard-subtitle">Matrícula: {{ estudiante.matricula }} • Carrera: {{ estudiante.carrera }}</p>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center">
+            <h6 class="text-muted mb-2">Promedio General</h6>
+            <h3 class="mb-0">{% if promedio %}{{ promedio|floatformat:2 }}{% else %}-{% endif %}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body text-center">
+            <h6 class="text-muted mb-2">Total Asignaturas</h6>
+            <h3 class="mb-0">{{ total_asignaturas }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm border-success">
+          <div class="card-body text-center">
+            <h6 class="text-muted mb-2">Aprobadas</h6>
+            <h3 class="mb-0 text-success">{{ aprobadas }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm border-danger">
+          <div class="card-body text-center">
+            <h6 class="text-muted mb-2">Reprobadas</h6>
+            <h3 class="mb-0 text-danger">{{ reprobadas }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Calificaciones</h5>
+        {% if creditos_totales %}
+        <small class="text-muted">Créditos totales: {{ creditos_totales }}</small>
+        {% endif %}
+      </div>
+      <div class="card-body table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Asignatura</th>
+              <th>Créditos</th>
+              <th class="text-end">Nota</th>
+              <th class="text-center">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in calificaciones %}
+            <tr>
+              <td><strong>{{ c.asignatura.codigo }}</strong></td>
+              <td>{{ c.asignatura.nombre }}</td>
+              <td>{{ c.asignatura.creditos }}</td>
+              <td class="text-end"><strong>{{ c.nota }}</strong></td>
+              <td class="text-center">
+                {% if c.nota >= 60 %}
+                  <span class="badge bg-success">Aprobada</span>
+                {% else %}
+                  <span class="badge bg-danger">Reprobada</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center text-muted">Sin calificaciones disponibles.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer d-flex flex-wrap gap-2 justify-content-between align-items-center">
+        <div>
+          <strong>Resumen:</strong> {{ aprobadas }} aprobada{{ aprobadas|pluralize }} de {{ total_asignaturas }} asignatura{{ total_asignaturas|pluralize }}
+        </div>
+        <div class="ms-auto d-flex gap-2">
+          <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modalCambiarClave">Cambiar contraseña</button>
+          <a class="btn btn-outline-danger" href="/notas/logout/">Cerrar sesión</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Cambio de Contraseña -->
+<div class="modal fade" id="modalCambiarClave" tabindex="-1" aria-labelledby="modalCambiarClaveLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalCambiarClaveLabel">Cambiar contraseña</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" action="/notas/{{ estudiante.id }}/cambiar-clave/">
+        <div class="modal-body">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Contraseña actual</label>
+            {{ cambiar_clave_form.actual }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nueva contraseña</label>
+            {{ cambiar_clave_form.nueva1 }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Confirmar nueva contraseña</label>
+            {{ cambiar_clave_form.nueva2 }}
+          </div>
+          <div class="form-text">Debe tener al menos 8 caracteres.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

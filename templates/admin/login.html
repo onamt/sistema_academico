@@ -1,0 +1,371 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistema de Gestión Académica Universitaria</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    padding: 2rem;
+  }
+  
+  .login-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 3rem;
+    max-width: 450px;
+    width: 100%;
+    animation: slideUp 0.5s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  
+  .login-header h1 {
+    color: #2d3748;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  
+  .login-header svg {
+    width: 32px;
+    height: 32px;
+    fill: #667eea;
+  }
+  
+  .login-header p {
+    color: #718096;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  
+  .btn-login-option {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  
+  .btn-admin {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+  
+  .btn-admin:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+    color: white;
+  }
+  
+  .btn-estudiante {
+    background: white;
+    color: #667eea;
+    border-color: #667eea;
+  }
+  
+  .btn-estudiante:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.3);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    color: #2d3748;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="password"] {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f7fafc;
+  }
+  
+  .form-group input[type="text"]:focus,
+  .form-group input[type="password"]:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  }
+  
+  .form-group .errorlist {
+    list-style: none;
+    margin-top: 0.5rem;
+    padding: 0;
+  }
+  
+  .form-group .errorlist li {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    background-color: #fed7d7;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border-left: 3px solid #e53e3e;
+  }
+  
+  .errornote {
+    background-color: #fed7d7;
+    border: 1px solid #fc8181;
+    border-left: 4px solid #e53e3e;
+    border-radius: 8px;
+    color: #c53030;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    margin-top: 0.5rem;
+  }
+  
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+    color: white;
+  }
+  
+  .modal-content {
+    border-radius: 15px;
+    border: none;
+  }
+  
+  .modal-header {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1.5rem;
+  }
+  
+  .modal-header .modal-title {
+    font-weight: 700;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem 1.5rem;
+  }
+  
+  @media (max-width: 576px) {
+    .login-container {
+      padding: 2rem 1.5rem;
+    }
+    
+    .login-header h1 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="login-container">
+  <div class="login-header">
+    <h1>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zM4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8z"/>
+      </svg>
+      Sistema Académico
+    </h1>
+    <p>Elige tu tipo de acceso</p>
+  </div>
+
+  <div class="d-grid gap-2">
+    <button type="button" class="btn-login-option btn-admin" data-bs-toggle="modal" data-bs-target="#modalAdmin">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+      </svg>
+      Soy Administrador
+    </button>
+    <button type="button" class="btn-login-option btn-estudiante" data-bs-toggle="modal" data-bs-target="#modalEstudiante">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zM4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8z"/>
+      </svg>
+      Soy Estudiante
+    </button>
+  </div>
+</div>
+
+<!-- Modal Administrador -->
+<div class="modal fade{% if form.errors %} show{% endif %}" id="modalAdmin" tabindex="-1" aria-labelledby="modalAdminLabel" aria-hidden="{% if form.errors %}false{% else %}true{% endif %}"{% if form.errors %} style="display: block;"{% endif %}>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAdminLabel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" class="text-primary">
+            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+          </svg>
+          Acceso Administrador
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ app_path }}" method="post" id="login-form-admin">
+        <div class="modal-body">
+          {% csrf_token %}
+          {% if form.errors and not form.non_field_errors %}
+            <div class="errornote mb-3">
+              {% if form.errors.items|length == 1 %}Por favor, corrige el error siguiente.{% else %}Por favor, corrige los siguientes errores.{% endif %}
+            </div>
+          {% endif %}
+          {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+              <div class="errornote mb-3">{{ error }}</div>
+            {% endfor %}
+          {% endif %}
+          <div class="form-group">
+            <label for="{{ form.username.id_for_label }}" class="required">{{ form.username.label }}:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <ul class="errorlist">
+                {% for error in form.username.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.password.id_for_label }}" class="required">{{ form.password.label }}:</label>
+            {{ form.password }}
+            <input type="hidden" name="next" value="{{ next }}">
+            {% if form.password.errors %}
+              <ul class="errorlist">
+                {% for error in form.password.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% if form.errors %}
+<div class="modal-backdrop fade show"></div>
+{% endif %}
+
+<!-- Modal Estudiante -->
+<div class="modal fade" id="modalEstudiante" tabindex="-1" aria-labelledby="modalEstudianteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEstudianteLabel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" class="text-primary">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zM4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8z"/>
+          </svg>
+          Acceso Estudiante
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" action="/notas/login/" id="login-form-estudiante" novalidate>
+        <div class="modal-body">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="required">Matrícula:</label>
+            <input type="text" name="matricula" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="required">Contraseña:</label>
+            <input type="password" name="clave" class="form-control" required>
+          </div>
+          <div class="form-text text-center">
+            <small class="text-muted">¿Olvidaste tu contraseña? Contacta al administrador</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+{% if form.errors %}
+<script>
+  // Abrir modal automáticamente si hay errores
+  var modal = document.getElementById('modalAdmin');
+  var bsModal = new bootstrap.Modal(modal, {backdrop: true});
+  bsModal.show();
+</script>
+{% endif %}
+</body>
+</html>
